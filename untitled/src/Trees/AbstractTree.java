@@ -6,9 +6,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Stack;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AbstractTree {
     static final boolean VALIDATE = false;
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
     public Node getRoot() {
         return Root;
     }
@@ -51,8 +54,10 @@ public class AbstractTree {
     }
 
     Node findMin(Node root) {
+        logger.debug("Finding min in " + (root == Nil ? "Nil" : root.value) + "'s subtree");
         Node x = root;
         while (x.left != Nil) x = x.left;
+        logger.debug("Min: " + (x == Nil ? "Nil" : x.value));
         return x;
     }
 
@@ -61,6 +66,7 @@ public class AbstractTree {
         else if (u == u.p.left) u.p.left = v;
         else u.p.right = v;
         v.p = u.p;
+        logger.debug("Transplant: " + v + " -> " + u);
     }
 
     boolean contains(int v) {
