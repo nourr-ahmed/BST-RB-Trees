@@ -1,6 +1,7 @@
 package Trees;
 
 import Nodes.Node;
+import Validation.Validator;
 
 public class BSTree extends AbstractTree implements ITree {
     public BSTree() {
@@ -18,6 +19,7 @@ public class BSTree extends AbstractTree implements ITree {
         else if (v < parent.value) parent.left = node;
         else parent.right = node;
         size++;
+        if (VALIDATE) Validator.check(this);
         return true;
     }
     public boolean delete(int v) {
@@ -37,6 +39,7 @@ public class BSTree extends AbstractTree implements ITree {
             y.left.p = y;
         }
         size--;
+        if (VALIDATE) Validator.check(this);
         return true;
     }
     @Override

@@ -2,6 +2,7 @@ package Trees;
 
 import Nodes.Node;
 import Nodes.RBNode;
+import Validation.Validator;
 
 public class RBTree extends AbstractTree implements ITree {
     public RBTree() {
@@ -21,6 +22,7 @@ public class RBTree extends AbstractTree implements ITree {
         else parent.right = node;
         RBInsertFixup(asRB(node));
         size++;
+        if (VALIDATE) Validator.check(this);
         return true;
     }
 
@@ -117,6 +119,7 @@ public class RBTree extends AbstractTree implements ITree {
         }
         if (yOriginalColor == RBNode.Color.BLACK) RBDeleteFixup(x);
         size--;
+        if (VALIDATE) Validator.check(this);
         return true;
     }
     private void RBDeleteFixup (Node x) {

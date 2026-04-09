@@ -8,9 +8,20 @@ import java.util.Queue;
 import java.util.Stack;
 
 public class AbstractTree {
+    static final boolean VALIDATE = false;
+    public Node getRoot() {
+        return Root;
+    }
+
+    public Node getNil() {
+        return Nil;
+    }
+
     protected Node Root;
     protected Node Nil;
     protected int size;
+
+
 
     public AbstractTree()
     {
