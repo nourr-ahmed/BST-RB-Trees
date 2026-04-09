@@ -11,6 +11,10 @@ public class RBTree extends AbstractTree implements ITree {
         Root = Nil;
     }
 
+    public String getName() {
+        return "RBTree";
+    }
+
     public boolean insert(int v) {
         logger.debug("Attempting to insert " + v + " into RBTree");
         Node parent = findParent(v);

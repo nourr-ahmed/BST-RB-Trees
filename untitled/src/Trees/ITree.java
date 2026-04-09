@@ -9,4 +9,6 @@ public interface ITree {
     public int[] inOrder();
     public int height();
     public int size();
+
+    public String getName();
 }

@@ -9,6 +9,10 @@ public class BSTree extends AbstractTree implements ITree {
         Nil = new Node(-1);
         Root = Nil;
     }
+
+    public String getName() {
+        return "BSTree";
+    }
     public boolean insert(int v) {
         logger.debug("Attempting to insert " + v + " into BSTree");
 
