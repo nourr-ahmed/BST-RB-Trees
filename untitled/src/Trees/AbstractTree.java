@@ -28,14 +28,14 @@ public class AbstractTree {
 
     public AbstractTree()
     {
-        int size = 0;
+        this.size = 0;
     }
 
     Node findNode(int value) {
         Node x =  Root;
         while (x != Nil) {
-            if (x.value < value) x = x.left;
-            else if (x.value > value) x = x.right;
+            if (value < x.value) x = x.left;
+            else if (value > x.value) x = x.right;
             else return x;
         }
         return Nil;
@@ -66,7 +66,7 @@ public class AbstractTree {
         else if (u == u.p.left) u.p.left = v;
         else u.p.right = v;
         v.p = u.p;
-        logger.debug("Transplant: " + v + " -> " + u);
+        logger.debug("Transplant: " + (v == Nil ? "Nil" : v.value) + " -> " + (u== Nil ? "Nil" : u.value));
     }
 
     boolean contains(int v) {

@@ -16,7 +16,7 @@ public class Validator {
     private static void checkBSTProperty(ITree tree) {
         int[] arr = tree.inOrder();
         for (int i = 1; i < arr.length; i++) {
-            if (arr[i] >= arr[i - 1]) throw new RuntimeException("BST property violated");
+            if (arr[i] <= arr[i - 1]) throw new RuntimeException("BST property violated");
         }
     }
 

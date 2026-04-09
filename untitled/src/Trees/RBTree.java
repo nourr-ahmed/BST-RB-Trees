@@ -7,7 +7,8 @@ import Validation.Validator;
 public class RBTree extends AbstractTree implements ITree {
     public RBTree() {
         super();
-        super.Nil = new RBNode(-1, RBNode.Color.BLACK);
+        Nil = new RBNode(-1, RBNode.Color.BLACK);
+        Root = Nil;
     }
 
     public boolean insert(int v) {
@@ -26,6 +27,8 @@ public class RBTree extends AbstractTree implements ITree {
         else parent.right = node;
         RBInsertFixup(asRB(node));
         size++;
+        logger.debug("Inserted " + v + " into RBTree under " + (parent == Nil ? "Nil" : parent.value));
+
         if (VALIDATE) Validator.check(this);
         return true;
     }
@@ -41,15 +44,17 @@ public class RBTree extends AbstractTree implements ITree {
                     asRB(z.p.p).color = RBNode.Color.RED;
                     z = z.p.p;
                 }
-                else if (z == z.p.right) {
-                    logger.debug("Black uncle, zig zag");
-                    z = z.p;
-                    leftRotate(z);
+                else {
+                    if (z == z.p.right) {
+                        logger.debug("Black uncle, zig zag");
+                        z = z.p;
+                        leftRotate(z);
+                    }
+                    logger.debug("Black uncle, zig zig");
+                    asRB(z.p).color = RBNode.Color.BLACK;
+                    asRB(z.p.p).color = RBNode.Color.RED;
+                    rightRotate(z.p.p);
                 }
-                logger.debug("Black uncle, zig zig");
-                asRB(z.p).color = RBNode.Color.BLACK;
-                asRB(z.p.p).color = RBNode.Color.RED;
-                rightRotate(z.p.p);
             }
             else {
                 Node u = z.p.p.left;
@@ -60,15 +65,17 @@ public class RBTree extends AbstractTree implements ITree {
                     asRB(z.p.p).color = RBNode.Color.RED;
                     z = z.p.p;
                 }
-                else if (z == z.p.left) {
-                    logger.debug("Black uncle, zig zag");
-                    z = z.p;
-                    rightRotate(z);
+                else {
+                    if (z == z.p.left) {
+                        logger.debug("Black uncle, zig zag");
+                        z = z.p;
+                        rightRotate(z);
+                    }
+                    logger.debug("Black uncle, zig zig");
+                    asRB(z.p).color = RBNode.Color.BLACK;
+                    asRB(z.p.p).color = RBNode.Color.RED;
+                    leftRotate(z.p.p);
                 }
-                logger.debug("Black uncle, zig zig");
-                asRB(z.p).color = RBNode.Color.BLACK;
-                asRB(z.p.p).color = RBNode.Color.RED;
-                leftRotate(z.p.p);
             }
         }
         logger.debug("Ensure root is black");
@@ -157,19 +164,21 @@ public class RBTree extends AbstractTree implements ITree {
                     asRB(w).color = RBNode.Color.RED;
                     x = x.p;
                 }
-                else if (asRB(w.right).color == RBNode.Color.BLACK) {
-                    logger.debug("Sibling is black, with black far child");
-                    asRB(w.left).color = RBNode.Color.BLACK;
-                    asRB(w).color = RBNode.Color.RED;
-                    rightRotate(w);
-                    w = x.p.right;
+                else {
+                    if (asRB(w.right).color == RBNode.Color.BLACK) {
+                        logger.debug("Sibling is black, with black far child");
+                        asRB(w.left).color = RBNode.Color.BLACK;
+                        asRB(w).color = RBNode.Color.RED;
+                        rightRotate(w);
+                        w = x.p.right;
+                    }
+                    logger.debug("Sibling is black, with red far child");
+                    asRB(w).color = asRB(x.p).color;
+                    asRB(x.p).color = RBNode.Color.BLACK;
+                    asRB(w.right).color = RBNode.Color.BLACK;
+                    leftRotate(x.p);
+                    x = Root;
                 }
-                logger.debug("Sibling is black, with red far child");
-                asRB(w).color = asRB(x.p).color;
-                asRB(x.p).color = RBNode.Color.BLACK;
-                asRB(w.right).color = RBNode.Color.BLACK;
-                leftRotate(x.p);
-                x = Root;
 
             }
             else {
@@ -186,19 +195,21 @@ public class RBTree extends AbstractTree implements ITree {
                     asRB(w).color = RBNode.Color.RED;
                     x = x.p;
                 }
-                else if (asRB(w.left).color == RBNode.Color.BLACK) {
-                    logger.debug("Sibling is black, with black far child");
-                    asRB(w.right).color = RBNode.Color.BLACK;
-                    asRB(w).color = RBNode.Color.RED;
-                    leftRotate(w);
-                    w = x.p.left;
+                else {
+                    if (asRB(w.left).color == RBNode.Color.BLACK) {
+                        logger.debug("Sibling is black, with black far child");
+                        asRB(w.right).color = RBNode.Color.BLACK;
+                        asRB(w).color = RBNode.Color.RED;
+                        leftRotate(w);
+                        w = x.p.left;
+                    }
+                    logger.debug("Sibling is black, with red far child");
+                    asRB(w).color = asRB(x.p).color;
+                    asRB(x.p).color = RBNode.Color.BLACK;
+                    asRB(w.left).color = RBNode.Color.BLACK;
+                    rightRotate(x.p);
+                    x = Root;
                 }
-                logger.debug("Sibling is black, with red far child");
-                asRB(w).color = asRB(x.p).color;
-                asRB(x.p).color = RBNode.Color.BLACK;
-                asRB(w.left).color = RBNode.Color.BLACK;
-                rightRotate(x.p);
-                x = Root;
             }
 
         }

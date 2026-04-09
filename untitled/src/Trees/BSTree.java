@@ -6,25 +6,42 @@ import Validation.Validator;
 public class BSTree extends AbstractTree implements ITree {
     public BSTree() {
         super();
-        super.Nil = new Node(-1);
+        Nil = new Node(-1);
+        Root = Nil;
     }
     public boolean insert(int v) {
         logger.debug("Attempting to insert " + v + " into BSTree");
+
+//        Node x =  Root;
+//        logger.debug("root " + Root.value);
+//        Node parent = Nil;
+//        while (x != Nil) {
+//            parent = x;
+//            if (v < x.value) x = x.left;
+//            else if (v > x.value) x = x.right;
+//            else {
+//                logger.debug("Value" + v + " already exists. skipping");
+//                return false;
+//            }
+//        }
         Node parent = findParent(v);
-        if (parent == null)
-        {
+        if (parent == null) {
             logger.debug("Value" + v + " already exists. skipping");
             return false;
         }
+
         Node node = new Node(v);
         node.left = Nil;
         node.right = Nil;
         node.p = parent;
-        if (parent == Nil) Root = node;
+        if (parent == Nil) {
+            Root = node;
+            logger.debug("root after " + Root.value );
+        }
         else if (v < parent.value) parent.left = node;
         else parent.right = node;
         size++;
-        logger.debug("Inserted " + v + " into BSTree under" + (parent == Nil ? "Nil" : parent.value));
+        logger.debug("Inserted " + v + " into BSTree under " + (parent == Nil ? "Nil" : parent.value));
         if (VALIDATE) Validator.check(this);
         return true;
     }
