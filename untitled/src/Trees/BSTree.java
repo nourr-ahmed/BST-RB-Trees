@@ -17,6 +17,7 @@ public class BSTree extends AbstractTree implements ITree {
         if (parent == Nil) Root = node;
         else if (v < parent.value) parent.left = node;
         else parent.right = node;
+        size++;
         return true;
     }
     public boolean delete(int v) {
@@ -35,6 +36,7 @@ public class BSTree extends AbstractTree implements ITree {
             y.left = z.left;
             y.left.p = y;
         }
+        size--;
         return true;
     }
     @Override

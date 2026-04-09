@@ -20,6 +20,7 @@ public class RBTree extends AbstractTree implements ITree {
         else if (v < parent.value) parent.left = node;
         else parent.right = node;
         RBInsertFixup(asRB(node));
+        size++;
         return true;
     }
 
@@ -88,11 +89,91 @@ public class RBTree extends AbstractTree implements ITree {
     public boolean delete(int v) {
         Node z = findNode(v);
         if (z == Nil) return false;
+        Node y = z, x = Nil;
+        RBNode.Color yOriginalColor = asRB(y).color;
+        if (z.left == Nil) {
+            x =  z.right;
+            Transplant(z, z.right);
+        }
+        else if (z.right == Nil) {
+            x =  z.left;
+            Transplant(z, z.left);
+        }
+        else {
+            y = findMin(z.right);
+            yOriginalColor = asRB(y).color;
+            x = y.right;
+            if (y.p == z) x.p = y;
+            else {
+                Transplant(y, y.right);
+                y.right = z.right;
+                z.right.p = y;
+            }
+            Transplant(z, y);
+            y.left = z.left;
+            z.left.p = y;
+            asRB(y).color = asRB(z).color;
 
+        }
+        if (yOriginalColor == RBNode.Color.BLACK) RBDeleteFixup(x);
+        size--;
         return true;
     }
-    private void RBDeleteFixup (Node z) {
+    private void RBDeleteFixup (Node x) {
+        Node w = Nil;
+        while (asRB(x).color == RBNode.Color.BLACK && x != Root) {
+            if (x == x.p.left) {
+                w =  x.p.right;
+                if (asRB(w).color == RBNode.Color.RED) {
+                    asRB(w).color = RBNode.Color.BLACK;
+                    asRB(x.p).color = RBNode.Color.RED;
+                    leftRotate(x.p);
+                    w = x.p.right;
+                }
+                if (asRB(w.left).color == RBNode.Color.BLACK && asRB(w.right).color == RBNode.Color.BLACK) {
+                    asRB(w).color = RBNode.Color.RED;
+                    x = x.p;
+                }
+                else if (asRB(w.right).color == RBNode.Color.BLACK) {
+                    asRB(w.left).color = RBNode.Color.BLACK;
+                    asRB(w).color = RBNode.Color.RED;
+                    rightRotate(w);
+                    w = x.p.right;
+                }
+                asRB(w).color = asRB(x.p).color;
+                asRB(x.p).color = RBNode.Color.BLACK;
+                asRB(w.right).color = RBNode.Color.BLACK;
+                leftRotate(x.p);
+                x = Root;
 
+            }
+            else {
+                w =  x.p.left;
+                if (asRB(w).color == RBNode.Color.RED) {
+                    asRB(w).color = RBNode.Color.BLACK;
+                    asRB(x.p).color = RBNode.Color.RED;
+                    rightRotate(x.p);
+                    w = x.p.left;
+                }
+                if (asRB(w.right).color == RBNode.Color.BLACK && asRB(w.left).color == RBNode.Color.BLACK) {
+                    asRB(w).color = RBNode.Color.RED;
+                    x = x.p;
+                }
+                else if (asRB(w.left).color == RBNode.Color.BLACK) {
+                    asRB(w.right).color = RBNode.Color.BLACK;
+                    asRB(w).color = RBNode.Color.RED;
+                    leftRotate(w);
+                    w = x.p.left;
+                }
+                asRB(w).color = asRB(x.p).color;
+                asRB(x.p).color = RBNode.Color.BLACK;
+                asRB(w.left).color = RBNode.Color.BLACK;
+                rightRotate(x.p);
+                x = Root;
+            }
+
+        }
+        asRB(x).color = RBNode.Color.BLACK;
     }
     @Override
     public boolean contains(int v) {return super.contains(v);}
